@@ -1,0 +1,25 @@
+1.@EnableWebSecurity（认证，权限）
+	
+	①需要继承WebSecurityConfigurerAdapter
+	②@Autowired
+	  public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception
+	  （用于在内存存储登录认证的用户数据）
+	③protected void configure(HttpSecurity http) throws Exception
+	  （用于实现过滤的配置）
+
+2.认证
+	①分配用户
+		auth.inMemoryAuthentication().withUser("user1").password("123").roles("ADMIN1")
+		.and().withUser("user2").password("123").roles("ADMIN2")
+		.and().withUser("user3").password("123").roles("ADMIN3");
+	②设置自定义的登录界面
+		.and().formLogin().loginPage("/login").permitAll()
+		注意：登录自定义的url是“/”（需要在controller里自定义才能跳转）
+		.and().logout().logoutSuccessUrl("/login").permitAll();
+		（不需要写后台的从controller）
+
+3.权限：
+	设置权限
+		antMatchers("/admin/**").hasRole("UADMINSER")（该路径只有拥有该权限的路径才能访问）
+	禁用CSRF
+		http.csrf().disable();
